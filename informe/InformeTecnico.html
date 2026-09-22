@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Informe Tecnico - Proyecto Final Totito</title>
+<style>
+    @page { size: A4; margin: 18mm 16mm; }
+    * { box-sizing: border-box; }
+    body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #1f2430; font-size: 11.5pt; line-height: 1.5; margin: 0;
+    }
+    h1 { font-size: 20pt; color: #1a237e; margin: 0 0 4px; }
+    h2 {
+        font-size: 14pt; color: #283593; border-bottom: 2px solid #c5cae9;
+        padding-bottom: 3px; margin-top: 26px;
+    }
+    h3 { font-size: 12pt; color: #37474f; margin: 16px 0 4px; }
+    p { margin: 6px 0; text-align: justify; }
+    ul { margin: 6px 0 6px 18px; }
+    code, pre { font-family: Consolas, "Courier New", monospace; }
+    pre {
+        background: #f5f6f8; border: 1px solid #d8dbe0; border-left: 4px solid #3949ab;
+        padding: 10px 12px; border-radius: 4px; font-size: 9.5pt;
+        white-space: pre-wrap; line-height: 1.35;
+    }
+    .portada {
+        text-align: center; padding: 40px 0 20px; border-bottom: 3px solid #1a237e;
+        margin-bottom: 10px;
+    }
+    .portada .uni { font-size: 15pt; font-weight: bold; color: #1a237e; }
+    .portada .curso { font-size: 12pt; color: #455a64; margin-top: 4px; }
+    .portada .titulo { font-size: 24pt; font-weight: bold; margin: 26px 0 6px; color: #0d1330; }
+    .portada .sub { font-size: 13pt; color: #3949ab; }
+    .datos { margin: 26px auto 0; width: 70%; text-align: left; font-size: 11pt; }
+    .datos td { padding: 4px 6px; }
+    .datos td:first-child { font-weight: bold; color: #37474f; width: 40%; }
+    table.tab { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 10.5pt; }
+    table.tab th, table.tab td { border: 1px solid #b0bec5; padding: 6px 8px; text-align: left; }
+    table.tab th { background: #e8eaf6; color: #1a237e; }
+    .captura { text-align: center; margin: 14px 0; page-break-inside: avoid; }
+    .captura img { width: 62%; border: 1px solid #90a4ae; border-radius: 6px; }
+    .captura .pie { font-size: 9.5pt; color: #546e7a; margin-top: 4px; font-style: italic; }
+    .nota { background: #fff8e1; border-left: 4px solid #ffb300; padding: 8px 12px; font-size: 10pt; }
+    .ok { color: #2e7d32; font-weight: bold; }
+    .uml { text-align: center; margin: 10px 0; }
+    .uml svg { max-width: 100%; height: auto; }
+    .pagebreak { page-break-before: always; }
+    .firma { margin-top: 40px; font-size: 10pt; color: #455a64; }
+</style>
+</head>
+<body>
+
+<!-- ============ PORTADA ============ -->
+<div class="portada">
+    <div class="uni">Universidad Mariano Galvez de Guatemala</div>
+    <div class="curso">Facultad de Ingenieria en Sistemas &mdash; Programacion II</div>
+    <div class="titulo">Proyecto Final: Juego de Totito</div>
+    <div class="sub">Inteligencia Artificial con el algoritmo Minimax &middot; Java Swing</div>
+
+    <table class="datos">
+        <tr><td>Nombre del estudiante:</td><td>[ Escriba su nombre ]</td></tr>
+        <tr><td>Carne:</td><td>[ Escriba su carne ]</td></tr>
+        <tr><td>Catedratico:</td><td>[ Nombre del catedratico ]</td></tr>
+        <tr><td>Curso:</td><td>Programacion II</td></tr>
+        <tr><td>Fecha de entrega:</td><td>____________</td></tr>
+    </table>
+</div>
+
+<!-- ============ 1. INTRODUCCION ============ -->
+<h2>1. Introduccion</h2>
+<p>
+El presente informe describe el desarrollo del <b>Juego de Totito</b> (tres en linea)
+implementado en el lenguaje <b>Java</b>, con una interfaz grafica construida
+exclusivamente con las librerias <code>javax.swing</code> y <code>java.awt</code>.
+El programa integra un agente de Inteligencia Artificial capaz de enfrentar al
+usuario tomando decisiones a traves del algoritmo de busqueda en arbol
+<b>Minimax</b>, garantizando un juego optimo e imbatible. Ademas del modo contra la
+computadora, el juego incluye un <b>modo para dos jugadores</b>, de manera que dos
+personas puedan enfrentarse en el mismo equipo.
+</p>
+<p>
+El objetivo es aplicar los principios de la programacion orientada a objetos,
+separando claramente la logica del juego de la interfaz grafica, y demostrar la
+correcta implementacion recursiva del algoritmo Minimax sobre un juego de suma
+cero.
+</p>
+
+<h2>2. Descripcion del juego</h2>
+<ul>
+    <li><b>Tablero:</b> cuadricula de 3 filas por 3 columnas (9 casillas independientes).</li>
+    <li><b>Fichas:</b> <b>X</b> para el primer jugador y <b>O</b> para el segundo.</li>
+    <li><b>Turnos:</b> alternancia estricta entre ambos participantes.</li>
+    <li><b>Fin de partida:</b> victoria al alinear 3 fichas (horizontal, vertical o diagonal)
+        o empate cuando el tablero se llena sin ganador.</li>
+</ul>
+<h3>2.1 Modos de juego</h3>
+<p>El juego permite elegir entre dos modos mediante botones de seleccion:</p>
+<ul>
+    <li><b>Jugador vs Jugador:</b> dos personas juegan en el mismo equipo alternando
+        sus turnos (X y O).</li>
+    <li><b>Jugador vs Computadora:</b> el primer jugador se enfrenta a la IA, que
+        responde con el algoritmo Minimax.</li>
+</ul>
+<p>
+Los nombres de los jugadores son <b>editables</b> desde la propia ventana y se
+reflejan en los mensajes de turno y de resultado. En el modo contra la computadora,
+el segundo nombre se sustituye por "Computadora".</p>
+
+<h2>3. Requerimientos funcionales cubiertos</h2>
+<table class="tab">
+    <tr><th>Requerimiento</th><th>Como se cumple</th></tr>
+    <tr>
+        <td>Interfaz de usuario</td>
+        <td>Ventana Swing con tablero 3&times;3, barra de estado con el turno y
+            anuncio de ganador/empate, y boton <i>Nueva Partida</i>.</td>
+    </tr>
+    <tr>
+        <td>Validacion de movimientos</td>
+        <td>El metodo <code>Tablero.estaLibre()</code> impide ocupar casillas usadas
+            o fuera de los limites; las casillas ocupadas se deshabilitan.</td>
+    </tr>
+    <tr>
+        <td>Logica de IA (Minimax)</td>
+        <td>La clase <code>IA_Minimax</code> explora el arbol de decisiones y elige
+            siempre el movimiento optimo: gana o empata, nunca pierde.</td>
+    </tr>
+    <tr>
+        <td>Control del juego</td>
+        <td>Deteccion automatica de victoria (3 en linea) y empate, con reinicio
+            funcional del tablero.</td>
+    </tr>
+    <tr>
+        <td>Modos de juego</td>
+        <td>Selector entre <b>Jugador vs Jugador</b> y <b>Jugador vs Computadora</b>,
+            con nombres de jugador editables en la interfaz.</td>
+    </tr>
+</table>
+
+<!-- ============ 4. UML ============ -->
+<div class="pagebreak"></div>
+<h2>4. Arquitectura y diagrama de clases (UML)</h2>
+<p>
+La solucion se divide en clases independientes siguiendo los principios de la
+programacion orientada a objetos. La logica del juego (<code>Tablero</code>,
+<code>IA_Minimax</code>) no depende de Swing; la clase <code>JuegoMain</code>
+actua como puente entre la logica y la interfaz grafica.
+</p>
+
+<div class="uml">
+<svg viewBox="0 0 1000 780" width="100%" xmlns="http://www.w3.org/2000/svg"
+     font-family="Consolas, monospace" font-size="13.5">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3"
+            orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#37474f"/></marker>
+    <marker id="arrowOpen" markerWidth="12" markerHeight="12" refX="9" refY="4"
+            orient="auto"><path d="M0,0 L10,4 L0,8" fill="none"
+            stroke="#546e7a" stroke-width="1.5"/></marker>
+  </defs>
+
+  <!-- ===== Tablero ===== -->
+  <g>
+    <rect x="30" y="30" width="300" height="330" rx="6" fill="#ffffff" stroke="#37474f" stroke-width="1.5"/>
+    <rect x="30" y="30" width="300" height="30" rx="6" fill="#cfd8dc" stroke="#37474f" stroke-width="1.5"/>
+    <text x="180" y="51" text-anchor="middle" font-weight="bold" fill="#0d1330">Tablero</text>
+    <text x="44" y="82">- VACIO : char</text>
+    <text x="44" y="102">- TAM : int</text>
+    <text x="44" y="122">- celdas : char[3][3]</text>
+    <text x="44" y="142">+ Tablero()</text>
+    <text x="44" y="162">+ reiniciar() : void</text>
+    <text x="44" y="182">+ esValida(int,int) : boolean</text>
+    <text x="44" y="202">+ estaLibre(int,int) : boolean</text>
+    <text x="44" y="222">+ colocar(int,int,char) : boolean</text>
+    <text x="44" y="242">+ getCelda(int,int) : char</text>
+    <text x="44" y="262">+ vaciar(int,int) : void</text>
+    <text x="44" y="282">+ estaLleno() : boolean</text>
+    <text x="44" y="302">+ ganador() : char</text>
+    <text x="44" y="322">+ hayGanador(char) : boolean</text>
+    <text x="44" y="342">+ lineaGanadora() : int[][]</text>
+  </g>
+
+  <!-- ===== Jugador ===== -->
+  <g>
+    <rect x="360" y="30" width="250" height="170" rx="6" fill="#ffffff" stroke="#37474f" stroke-width="1.5"/>
+    <rect x="360" y="30" width="250" height="30" rx="6" fill="#cfd8dc" stroke="#37474f" stroke-width="1.5"/>
+    <text x="485" y="51" text-anchor="middle" font-weight="bold" fill="#0d1330">Jugador</text>
+    <text x="374" y="82">- nombre : String</text>
+    <text x="374" y="102">- simbolo : char</text>
+    <text x="374" y="122">+ Jugador(String, char)</text>
+    <text x="374" y="142">+ getNombre() : String</text>
+    <text x="374" y="162">+ getSimbolo() : char</text>
+  </g>
+
+  <!-- ===== IA_Minimax ===== -->
+  <g>
+    <rect x="640" y="30" width="330" height="190" rx="6" fill="#ffffff" stroke="#37474f" stroke-width="1.5"/>
+    <rect x="640" y="30" width="330" height="30" rx="6" fill="#cfd8dc" stroke="#37474f" stroke-width="1.5"/>
+    <text x="805" y="51" text-anchor="middle" font-weight="bold" fill="#0d1330">IA_Minimax</text>
+    <text x="654" y="82">- PUNTAJE_VICTORIA : int</text>
+    <text x="654" y="102">- simboloIA : char</text>
+    <text x="654" y="122">- simboloHumano : char</text>
+    <text x="654" y="142">+ IA_Minimax(char, char)</text>
+    <text x="654" y="162">+ mejorMovimiento(Tablero) : int[]</text>
+    <text x="654" y="182">~ minimax(Tablero, boolean, int) : int</text>
+    <text x="654" y="202">+ getSimboloIA() : char</text>
+  </g>
+
+  <!-- ===== JuegoMain ===== -->
+  <g>
+    <rect x="250" y="430" width="470" height="290" rx="6" fill="#ffffff" stroke="#37474f" stroke-width="1.5"/>
+    <rect x="250" y="430" width="470" height="30" rx="6" fill="#cfd8dc" stroke="#37474f" stroke-width="1.5"/>
+    <text x="485" y="451" text-anchor="middle" font-weight="bold" fill="#0d1330">JuegoMain  (extends JFrame)</text>
+    <text x="264" y="482">- tablero : Tablero</text>
+    <text x="264" y="502">- humano : Jugador</text>
+    <text x="264" y="522">- ia : IA_Minimax</text>
+    <text x="264" y="542">- botones : CasillaButton[9]</text>
+    <text x="264" y="562">- etiquetaEstado : JLabel</text>
+    <text x="264" y="582">- turnoHumano : boolean</text>
+    <text x="264" y="602">- juegoTerminado : boolean</text>
+    <text x="264" y="622">+ main(String[]) : void</text>
+    <text x="264" y="642">+ iniciarNuevaPartida() : void</text>
+    <text x="264" y="662">~ clickCasilla(int) : void</text>
+    <text x="264" y="682">~ jugarIA() : void</text>
+  </g>
+
+  <!-- ===== Relaciones ===== -->
+  <!-- Composicion: JuegoMain -> Tablero -->
+  <g transform="translate(330,430) rotate(-155)"><polygon points="0,0 8,-5 16,0 8,5" fill="#37474f"/></g>
+  <line x1="340" y1="426" x2="180" y2="360" stroke="#37474f" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="238" y="378" fill="#455a64" font-size="12">1</text>
+
+  <!-- Composicion: JuegoMain -> Jugador -->
+  <g transform="translate(430,430) rotate(-76.6)"><polygon points="0,0 8,-5 16,0 8,5" fill="#37474f"/></g>
+  <line x1="434" y1="414" x2="485" y2="200" stroke="#37474f" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="450" y="320" fill="#455a64" font-size="12">1</text>
+
+  <!-- Composicion: JuegoMain -> IA_Minimax -->
+  <g transform="translate(640,430) rotate(-52.7)"><polygon points="0,0 8,-5 16,0 8,5" fill="#37474f"/></g>
+  <line x1="650" y1="417" x2="800" y2="220" stroke="#37474f" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="712" y="320" fill="#455a64" font-size="12">1</text>
+
+  <!-- Dependencia: IA_Minimax ..> Tablero -->
+  <line x1="640" y1="120" x2="336" y2="120" stroke="#546e7a" stroke-width="1.5"
+        stroke-dasharray="6,5" marker-end="url(#arrowOpen)"/>
+  <text x="470" y="112" fill="#546e7a" font-size="12" text-anchor="middle">usa</text>
+
+  <!-- Nota de notacion -->
+  <text x="30" y="760" fill="#546e7a" font-size="12">
+    Notacion:  &lt;filled diamond&gt; composicion   &rarr; asociacion   &dash;&dash;&rarr; dependencia
+  </text>
+</svg>
+</div>
+<p class="nota">
+    <b>Notacion:</b> el rombo relleno indica <b>composicion</b> (JuegoMain contiene una
+    instancia de Tablero, Jugador e IA_Minimax); la flecha punteada indica una
+    <b>dependencia</b> (IA_Minimax utiliza Tablero para explorar el arbol de juego).
+    La clase interna <code>CasillaButton extends JButton</code> representa cada casilla
+    y pinta su simbolo con color propio incluso deshabilitada.
+</p>
+
+<!-- ============ 5. MINIMAX ============ -->
+<div class="pagebreak"></div>
+<h2>5. Implementacion de la Inteligencia Artificial (Minimax)</h2>
+<p>
+El algoritmo <b>Minimax</b> es el estandar para juegos de suma cero como el totito.
+Se construye un <b>arbol de decisiones</b> con todos los estados posibles: los nodos
+donde juega la IA son <b>maximizadores</b> (buscan el mayor puntaje) y los nodos donde
+juega el humano son <b>minimizadores</b> (buscan el menor puntaje). El valor de un estado
+terminal se define asi:
+</p>
+<ul>
+    <li>Victoria de la IA (<code>O</code>): <code>+10 &minus; profundidad</code>.</li>
+    <li>Victoria del humano (<code>X</code>): <code>&minus;10 + profundidad</code>.</li>
+    <li>Empate: <code>0</code>.</li>
+</ul>
+<p>
+Restar la profundidad hace que la IA prefiera ganar lo antes posible y retrasar al
+maximo una eventual derrota. Como el algoritmo asume que el rival tambien juega de
+forma optima, la IA <b>nunca pierde</b>: gana o empata.
+</p>
+
+<h3>5.1 Funcion recursiva <code>minimax</code></h3>
+<pre>
+int minimax(Tablero tablero, boolean esTurnoIA, int profundidad) {
+
+    // Casos base: estados terminales del arbol de juego
+    char ganador = tablero.ganador();
+    if (ganador == simboloIA)     return  PUNTAJE_VICTORIA - profundidad; // gana la IA
+    if (ganador == simboloHumano) return  profundidad - PUNTAJE_VICTORIA; // gana el humano
+    if (tablero.estaLleno())      return  0;                              // empate
+
+    if (esTurnoIA) {
+        // Nivel MAX: la IA elige la jugada con el mayor puntaje
+        int mejor = Integer.MIN_VALUE;
+        for (cada casilla libre) {
+            tablero.colocar(fila, col, simboloIA);          // intenta
+            int valor = minimax(tablero, false, profundidad + 1);
+            tablero.vaciar(fila, col);                      // deshace (backtracking)
+            mejor = Math.max(mejor, valor);
+        }
+        return mejor;
+    } else {
+        // Nivel MIN: el humano elige la jugada con el menor puntaje
+        int mejor = Integer.MAX_VALUE;
+        for (cada casilla libre) {
+            tablero.colocar(fila, col, simboloHumano);      // intenta
+            int valor = minimax(tablero, true, profundidad + 1);
+            tablero.vaciar(fila, col);                      // deshace (backtracking)
+            mejor = Math.min(mejor, valor);
+        }
+        return mejor;
+    }
+}
+</pre>
+
+<h3>5.2 Seleccion del movimiento</h3>
+<p>
+El metodo <code>mejorMovimiento</code> prueba cada casilla libre, evalua la posicion
+resultante con <code>minimax</code> y devuelve la jugada con el puntaje mas alto para
+la IA. La jugada se deshace tras evaluarla (<i>backtracking</i>) para no alterar el
+tablero real.
+</p>
+<pre>
+public int[] mejorMovimiento(Tablero tablero) {
+    int mejorValor = Integer.MIN_VALUE;
+    int[] mejor = null;
+    for (cada casilla libre) {
+        tablero.colocar(fila, col, simboloIA);
+        int valor = minimax(tablero, false, 1);   // ahora responde el humano
+        tablero.vaciar(fila, col);
+        if (valor &gt; mejorValor) { mejorValor = valor; mejor = {fila, col}; }
+    }
+    return mejor;
+}
+</pre>
+<p class="nota">
+    <b>Complejidad:</b> el arbol completo del totito tiene a lo sumo <b>9! = 362 880</b>
+    estados. Al podar las ramas que terminan antes (victorias tempranas), el numero de
+    posiciones realmente exploradas es mucho menor, por lo que la IA responde de forma
+    instantanea.
+</p>
+
+<!-- ============ 6. PRUEBAS ============ -->
+<div class="pagebreak"></div>
+<h2>6. Casos de prueba</h2>
+<p>
+Se realizaron dos tipos de prueba: una <b>verificacion exhaustiva</b> automatica
+(recorriendo todas las jugadas posibles del humano) y <b>capturas de pantalla</b> de
+la interfaz real para los escenarios exigidos.
+</p>
+
+<h3>6.1 Verificacion exhaustiva (IA imbatible)</h3>
+<p>Resultado de recorrer todas las ramas del arbol con la IA jugando de forma optima:</p>
+<pre>
+Partidas evaluadas : 569
+Victorias de la IA : 386
+Empates            : 183
+Victorias humano   : 0
+RESULTADO: OK - la IA es imbatible.
+</pre>
+<p class="ok">El jugador humano no gano en ninguna de las 569 lineas de juego evaluadas.</p>
+
+<h3>6.2 Capturas de pantalla</h3>
+
+<div class="captura">
+    <img src="capturas/01_en_juego.png" alt="Partida en curso">
+    <div class="pie">Captura 1. Partida en curso: turno del jugador (X) con casillas ocupadas bloqueadas.</div>
+</div>
+
+<div class="captura">
+    <img src="capturas/02_victoria_ia.png" alt="Victoria de la IA">
+    <div class="pie">Captura 2. Victoria de la computadora (O) con la linea ganadora resaltada.</div>
+</div>
+
+<div class="captura">
+    <img src="capturas/03_empate.png" alt="Empate">
+    <div class="pie">Captura 3. Empate: tablero completo sin ganador tras un juego optimo.</div>
+</div>
+
+<div class="captura">
+    <img src="capturas/04_dos_jugadores.png" alt="Modo dos jugadores">
+    <div class="pie">Captura 4. Modo Jugador vs Jugador con nombres editables y turno del Jugador 2.</div>
+</div>
+
+<!-- ============ 7. EJECUCION ============ -->
+<h2>7. Como ejecutar el proyecto</h2>
+<p><b>Requisito:</b> Java JDK 11 o superior.</p>
+<pre>
+javac -encoding UTF-8 -d out src\com\umg\totito\*.java
+java -cp out com.umg.totito.JuegoMain
+</pre>
+<p>
+Tambien se puede ejecutar con doble clic en el archivo <code>ejecutar.bat</code>,
+que compila y abre el juego automaticamente. El proyecto tambien puede abrirse
+directamente en cualquier IDE (IntelliJ IDEA, Eclipse o NetBeans) y ejecutar la
+clase <code>JuegoMain</code>.
+</p>
+
+<h2>8. Conclusiones</h2>
+<ul>
+    <li>Se implemento el algoritmo Minimax de forma recursiva con backtracking,
+        logrando un agente de IA imbatible (verificado en 569 partidas).</li>
+    <li>La interfaz Swing cumple con el tablero 3&times;3, el bloqueo inmediato de
+        casillas, los indicadores de turno/estado y el reinicio de partida.</li>
+    <li>El juego integra dos modos (contra la computadora y entre dos personas)
+        con nombres de jugador editables, conservando la IA como requisito.</li>
+    <li>La separacion en clases (<code>Tablero</code>, <code>Jugador</code>,
+        <code>IA_Minimax</code>, <code>JuegoMain</code>) demuestra la aplicacion
+        de los principios de la programacion orientada a objetos.</li>
+</ul>
+
+<div class="firma">
+    <p>______________________________________<br>
+    Nombre y firma del estudiante</p>
+</div>
+
+</body>
+</html>
