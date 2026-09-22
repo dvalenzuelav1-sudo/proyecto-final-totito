@@ -59,3 +59,4 @@ nunca pierde.
 ## Autor
 
 - **Denis Valenzuela** - dvalenzuelav1@miumg.edu.gt
+- **Miguel Ayala** - mayalad@miumg.edu.gt
