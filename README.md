@@ -56,7 +56,7 @@ valor de un estado terminal es `+10 - profundidad` si gana la IA, `profundidad -
 si gana el rival, y `0` si es empate. Asi la IA siempre elige la jugada optima y
 nunca pierde.
 
-## Autor
+## Autores
 
 - **Denis Valenzuela** - dvalenzuelav1@miumg.edu.gt
 - **Miguel Ayala** - mayalad@miumg.edu.gt
