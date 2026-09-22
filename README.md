@@ -60,3 +60,4 @@ nunca pierde.
 
 - **Denis Valenzuela** - dvalenzuelav1@miumg.edu.gt
 - **Miguel Ayala** - mayalad@miumg.edu.gt
+- **Michell Reyes** - mreyesb12@miumg.edu.gt
